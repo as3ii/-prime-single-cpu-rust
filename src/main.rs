@@ -44,7 +44,9 @@ fn main() -> std::io::Result<()> {
     stdin()
         .read_line(&mut response)
         .expect("Failed to read line");
-    if response == "y\n" {
+    let len = response.trim_right().len();
+    response.truncate(len);
+    if response == "y" {
         lib::print_vec(&result);
     }
     Ok(())

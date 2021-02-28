@@ -1,28 +1,30 @@
 mod lib;
 use std::env;
+use std::error::Error;
 use std::io::{stdin, stdout, Write};
 use std::time::Instant;
 
-fn main() -> std::io::Result<()> {
-    let args: Vec<String> = env::args().collect();
+fn main() -> Result<(), Box<dyn Error>> {
     let max: u128;
-    if args.len() != 2 {
-        let mut response = String::new();
-        print!("Write max result: ");
-        stdout().flush()?;
-        stdin()
-            .read_line(&mut response)
-            .expect("Failed to read line");
-        let len = response.trim_right().len();
-        response.truncate(len);
-        match response.parse::<u128>() {
-            Err(err) => panic!("Give only unsigned integer as argument; Error: {:?}", err),
-            Ok(n) => max = n,
-        }
-    } else {
-        match args[1].parse::<u128>() {
-            Err(err) => panic!("Give only unsigned integer as argument; Error: {:?}", err),
-            Ok(n) => max = n,
+    {
+        let args: Vec<String> = env::args().collect();
+        if args.len() == 2 {
+            match args[1].parse::<u128>() {
+                Err(err) => panic!("Give only unsigned integer as argument; Error: {:?}", err),
+                Ok(n) => max = n,
+            }
+        } else {
+            let mut response = String::new();
+            print!("Write max result: ");
+            stdout().flush()?;
+            stdin()
+                .read_line(&mut response)
+                .expect("Failed to read line");
+            response.truncate(response.trim_end().len());
+            match response.parse::<u128>() {
+                Err(err) => panic!("Give only unsigned integer as argument; Error: {:?}", err),
+                Ok(n) => max = n,
+            }
         }
     }
 
@@ -44,8 +46,7 @@ fn main() -> std::io::Result<()> {
     stdin()
         .read_line(&mut response)
         .expect("Failed to read line");
-    let len = response.trim_right().len();
-    response.truncate(len);
+    response.truncate(response.trim_end().len());
     if response == "y" {
         lib::print_vec(&result);
     }

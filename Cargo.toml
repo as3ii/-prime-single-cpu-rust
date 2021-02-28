@@ -2,5 +2,6 @@
 name = "prime-single-cpu-rust"
 version = "0.1.0"
 authors = ["Lorenzo Debertolis <as3ii777@gmail.com>"]
+edition = "2018"
 
 [dependencies]
